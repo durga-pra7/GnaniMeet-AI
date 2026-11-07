@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GnaniMeet AI | Meeting Intelligence</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f4f6fb;
+            color: #202437;
+            line-height: 1.6;
+        }
+
+        header {
+            background: #ffffff;
+            padding: 20px 7%;
+            border-bottom: 1px solid #e5e7ef;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 23px;
+            font-weight: bold;
+            color: #4f46e5;
+        }
+
+        .logo span {
+            color: #202437;
+        }
+
+        .header-label {
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 35px auto;
+            padding: 0 20px;
+        }
+
+        .hero {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .hero h1 {
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+
+        .hero p {
+            color: #6b7280;
+            font-size: 16px;
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+        }
+
+        .card {
+            background: #ffffff;
+            border: 1px solid #e5e7ef;
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 5px 20px rgba(20, 30, 70, 0.04);
+        }
+
+        .section-number {
+            color: #4f46e5;
+            font-size: 13px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .card h2 {
+            font-size: 22px;
+            margin-bottom: 8px;
+        }
+
+        .description {
+            color: #6b7280;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        .upload-area {
+            border: 2px dashed #c7c9e8;
+            border-radius: 12px;
+            background: #fafaff;
+            padding: 30px 15px;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .upload-icon {
+            font-size: 38px;
+            margin-bottom: 10px;
+        }
+
+        .upload-area p {
+            color: #6b7280;
+            font-size: 13px;
+            margin-top: 8px;
+        }
+
+        input[type="file"] {
+            width: 100%;
+            margin-top: 15px;
+            font-size: 13px;
+        }
+
+        button {
+            border: none;
+            border-radius: 9px;
+            padding: 12px 18px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .primary-btn {
+            background: #4f46e5;
+            color: white;
+            width: 100%;
+        }
+
+        .primary-btn:hover:not(:disabled) {
+            background: #4338ca;
+        }
+
+        .secondary-btn {
+            background: #eef0ff;
+            color: #4f46e5;
+        }
+
+        .secondary-btn:hover:not(:disabled) {
+            background: #e0e4ff;
+        }
+
+        .button-row {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .button-row button {
+            flex: 1;
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 25px 0;
+            color: #9ca3af;
+            font-size: 12px;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: "";
+            height: 1px;
+            background: #e5e7ef;
+            flex: 1;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 150px;
+            border: 1px solid #dfe2ec;
+            border-radius: 10px;
+            padding: 14px;
+            resize: vertical;
+            font-family: inherit;
+            font-size: 14px;
+            outline: none;
+        }
+
+        textarea:focus {
+            border-color: #4f46e5;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+
+        .character-count {
+            color: #9ca3af;
+            font-size: 12px;
+            text-align: right;
+            margin-top: 5px;
+        }
+
+        .status {
+            margin-top: 15px;
+            font-size: 13px;
+            color: #6b7280;
+            min-height: 20px;
+            overflow-wrap: anywhere;
+        }
+
+        .status.error {
+            color: #dc2626;
+        }
+
+        .status.success {
+            color: #059669;
+        }
+
+        .notes-card {
+            margin-top: 25px;
+        }
+
+        .notes-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .notes-header h2 {
+            margin-bottom: 0;
+        }
+
+        .notes-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .notes-section {
+            padding: 20px 0;
+            border-bottom: 1px solid #edf0f5;
+        }
+
+        .notes-section:last-child {
+            border-bottom: none;
+        }
+
+        .notes-section h3 {
+            font-size: 14px;
+            color: #4f46e5;
+            margin-bottom: 12px;
+            letter-spacing: 0.4px;
+        }
+
+        .notes-section p {
+            color: #374151;
+            white-space: pre-wrap;
+        }
+
+        .notes-section ul {
+            padding-left: 22px;
+        }
+
+        .notes-section li {
+            margin-bottom: 8px;
+            color: #374151;
+            overflow-wrap: anywhere;
+        }
+
+        .empty-state {
+            color: #9ca3af !important;
+            font-style: italic;
+        }
+
+        .action-item {
+            margin-bottom: 12px;
+        }
+
+        .action-item strong {
+            color: #202437;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px 15px;
+            color: #9ca3af;
+            font-size: 13px;
+        }
+
+        @media (max-width: 760px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hero h1 {
+                font-size: 28px;
+            }
+
+            header {
+                padding: 18px 5%;
+            }
+
+            .container {
+                margin-top: 25px;
+            }
+
+            .notes-header {
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <div class="logo">GnaniMeet <span>AI</span></div>
+    <div class="header-label">AI Meeting Assistant</div>
+</header>
+
+<div class="container">
+
+    <section class="hero">
+        <h1>Turn meetings into meaningful insights</h1>
+        <p>
+            Upload your recording or paste a transcript.
+            Let AI generate structured meeting notes.
+        </p>
+    </section>
+
+    <div class="main-grid">
+
+        <!-- AUDIO UPLOAD -->
+        <section class="card">
+
+            <div class="section-number">01</div>
+            <h2>Upload meeting recording</h2>
+
+            <p class="description">
+                Transcribe your meeting audio using Prisma.
+            </p>
+
+            <div class="upload-area">
+                <div class="upload-icon">🎙️</div>
+
+                <strong>Choose your meeting recording</strong>
+
+                <p>
+                    WAV, MP3, M4A, WEBM, OGG · Up to 100 MB
+                </p>
+
+                <input
+                    type="file"
+                    id="audio-file"
+                    accept=".wav,.mp3,.m4a,.webm,.ogg,audio/*"
+                >
+            </div>
+
+            <button
+                type="button"
+                id="transcribe-button"
+                class="primary-btn"
+                onclick="transcribeAudio()"
+            >
+                Transcribe with Prisma
+            </button>
+
+            <div id="transcription-status" class="status"></div>
+
+        </section>
+
+        <!-- TRANSCRIPT INPUT -->
+        <section class="card">
+
+            <div class="section-number">01</div>
+            <h2>Paste transcript</h2>
+
+            <p class="description">
+                Already have a transcript? Paste it below.
+            </p>
+
+            <textarea
+                id="transcript"
+                placeholder="Paste your meeting transcript here..."
+            ></textarea>
+
+            <div class="character-count">
+                <span id="character-count">0</span> characters
+            </div>
+
+            <button
+                type="button"
+                id="generate-notes"
+                class="primary-btn"
+                onclick="generateMeetingNotes()"
+                style="margin-top: 15px;"
+            >
+                Generate meeting notes →
+            </button>
+
+            <div id="summary-status" class="status"></div>
+
+        </section>
+
+    </div>
+
+    <!-- MEETING INTELLIGENCE -->
+    <section class="card notes-card">
+
+        <div class="notes-header">
+            <div>
+                <div class="section-number">02</div>
+                <h2>Meeting intelligence</h2>
+            </div>
+
+            <div class="notes-actions">
+                <button
+                    type="button"
+                    class="secondary-btn"
+                    onclick="copyNotes()"
+                >
+                    Copy notes
+                </button>
+
+                <button
+                    type="button"
+                    class="secondary-btn"
+                    onclick="downloadNotes()"
+                >
+                    Download .md
+                </button>
+            </div>
+        </div>
+
+        <div class="notes-section">
+            <h3>EXECUTIVE SUMMARY</h3>
+            <p id="executive-summary" class="empty-state">
+                Your meeting summary will appear here.
+            </p>
+        </div>
+
+        <div class="notes-section">
+            <h3>KEY DISCUSSION POINTS</h3>
+            <ul id="key-points">
+                <li class="empty-state">No discussion points yet.</li>
+            </ul>
+        </div>
+
+        <div class="notes-section">
+            <h3>DECISIONS</h3>
+            <ul id="decisions">
+                <li class="empty-state">No decisions yet.</li>
+            </ul>
+        </div>
+
+        <div class="notes-section">
+            <h3>ACTION ITEMS</h3>
+            <ul id="action-items">
+                <li class="empty-state">No action items yet.</li>
+            </ul>
+        </div>
+
+        <div class="notes-section">
+            <h3>OPEN QUESTIONS</h3>
+            <ul id="open-questions">
+                <li class="empty-state">No open questions yet.</li>
+            </ul>
+        </div>
+
+    </section>
+
+</div>
+
+<footer>
+    GnaniMeet AI · Intelligent Meeting Notes
+</footer>
+
+<script>
+    let currentNotes = null;
+
+    // --------------------------------------------------
+    // Character counter
+    // --------------------------------------------------
+
+    const transcriptElement = document.getElementById("transcript");
+
+    transcriptElement.addEventListener("input", function () {
+        document.getElementById("character-count").textContent =
+            this.value.length;
+    });
+
+
+    // --------------------------------------------------
+    // Transcribe audio using Prisma
+    // --------------------------------------------------
+
+    async function transcribeAudio() {
+
+        const fileInput = document.getElementById("audio-file");
+        const statusElement =
+            document.getElementById("transcription-status");
+
+        const button =
+            document.getElementById("transcribe-button");
+
+        const file = fileInput.files[0];
+
+        if (!file) {
+            showStatus(
+                statusElement,
+                "Please select an audio file first.",
+                "error"
+            );
+            return;
+        }
+
+        if (file.size > 100 * 1024 * 1024) {
+            showStatus(
+                statusElement,
+                "File size must be less than 100 MB.",
+                "error"
+            );
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append("audio", file);
+
+        try {
+            button.disabled = true;
+            button.textContent = "Transcribing audio...";
+
+            showStatus(
+                statusElement,
+                "Uploading audio and transcribing. Please wait...",
+                ""
+            );
+
+            const response = await fetch("/api/transcribe", {
+                method: "POST",
+                body: formData
+            });
+
+            const result = await response.json();
+
+            if (!response.ok || !result.success) {
+                throw new Error(
+                    result.error || "Transcription failed."
+                );
+            }
+
+            if (!result.transcript) {
+                throw new Error("No transcript returned.");
+            }
+
+            transcriptElement.value = result.transcript;
+
+            document.getElementById("character-count").textContent =
+                result.transcript.length;
+
+            showStatus(
+                statusElement,
+                "Transcription completed successfully!",
+                "success"
+            );
+
+        } catch (error) {
+            console.error("Transcription error:", error);
+
+            showStatus(
+                statusElement,
+                error.message,
+                "error"
+            );
+
+        } finally {
+            button.disabled = false;
+            button.textContent = "Transcribe with Prisma";
+        }
+    }
+
+
+    // --------------------------------------------------
+    // Generate meeting notes using Groq
+    // --------------------------------------------------
+
+    async function generateMeetingNotes() {
+
+        const transcript = transcriptElement.value.trim();
+
+        const button =
+            document.getElementById("generate-notes");
+
+        const statusElement =
+            document.getElementById("summary-status");
+
+        if (!transcript) {
+            showStatus(
+                statusElement,
+                "Please paste or transcribe a meeting transcript first.",
+                "error"
+            );
+            return;
+        }
+
+        try {
+            button.disabled = true;
+            button.textContent = "Generating notes...";
+
+            showStatus(
+                statusElement,
+                "AI is analyzing your meeting transcript...",
+                ""
+            );
+
+            const response = await fetch("/api/summarize", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    transcript: transcript
+                })
+            });
+
+            const result = await response.json();
+
+            if (!response.ok || !result.success) {
+                throw new Error(
+                    result.error || "Failed to generate meeting notes."
+                );
+            }
+
+            // Expected Flask response:
+            // {
+            //   success: true,
+            //   summary: {
+            //      summary: "...",
+            //      key_points: [],
+            //      decisions: [],
+            //      action_items: [],
+            //      open_questions: []
+            //   }
+            // }
+
+            const notes = result.summary;
+
+            if (!notes || typeof notes !== "object") {
+                throw new Error(
+                    "The server returned an invalid meeting notes response."
+                );
+            }
+
+            currentNotes = notes;
+
+            renderNotes(notes);
+
+            showStatus(
+                statusElement,
+                "Meeting notes generated successfully!",
+                "success"
+            );
+
+        } catch (error) {
+            console.error("Summarization error:", error);
+
+            showStatus(
+                statusElement,
+                error.message,
+                "error"
+            );
+
+        } finally {
+            button.disabled = false;
+            button.textContent = "Generate meeting notes →";
+        }
+    }
+
+
+    // --------------------------------------------------
+    // Display notes safely
+    // --------------------------------------------------
+
+    function renderNotes(notes) {
+
+        const executiveSummary =
+            document.getElementById("executive-summary");
+
+        executiveSummary.textContent =
+            notes.summary || "No summary available.";
+
+        executiveSummary.classList.remove("empty-state");
+
+        renderList(
+            "key-points",
+            notes.key_points,
+            "No discussion points available."
+        );
+
+        renderList(
+            "decisions",
+            notes.decisions,
+            "No decisions available."
+        );
+
+        renderActionItems(
+            "action-items",
+            notes.action_items
+        );
+
+        renderList(
+            "open-questions",
+            notes.open_questions,
+            "No open questions available."
+        );
+    }
+
+
+    // --------------------------------------------------
+    // Render standard lists
+    // --------------------------------------------------
+
+    function renderList(elementId, items, emptyMessage) {
+
+        const list = document.getElementById(elementId);
+
+        list.innerHTML = "";
+
+        if (!Array.isArray(items) || items.length === 0) {
+
+            const li = document.createElement("li");
+
+            li.textContent = emptyMessage;
+            li.className = "empty-state";
+
+            list.appendChild(li);
+
+            return;
+        }
+
+        items.forEach(item => {
+
+            const li = document.createElement("li");
+
+            li.textContent = String(item);
+
+            list.appendChild(li);
+        });
+    }
+
+
+    // --------------------------------------------------
+    // Render action items
+    // --------------------------------------------------
+
+    function renderActionItems(elementId, items) {
+
+        const list = document.getElementById(elementId);
+
+        list.innerHTML = "";
+
+        if (!Array.isArray(items) || items.length === 0) {
+
+            const li = document.createElement("li");
+
+            li.textContent = "No action items available.";
+            li.className = "empty-state";
+
+            list.appendChild(li);
+
+            return;
+        }
+
+        items.forEach(item => {
+
+            const li = document.createElement("li");
+
+            li.className = "action-item";
+
+            const task = item.task || "Task not specified";
+            const owner = item.owner || "Not specified";
+            const deadline = item.deadline || "Not specified";
+
+            li.textContent =
+                `${task} — Owner: ${owner} — Deadline: ${deadline}`;
+
+            list.appendChild(li);
+        });
+    }
+
+
+    // --------------------------------------------------
+    // Copy notes
+    // --------------------------------------------------
+
+    async function copyNotes() {
+
+        if (!currentNotes) {
+            alert("Generate meeting notes before copying.");
+            return;
+        }
+
+        const markdown = createMarkdownNotes(currentNotes);
+
+        try {
+            await navigator.clipboard.writeText(markdown);
+
+            alert("Meeting notes copied successfully!");
+
+        } catch (error) {
+            console.error("Copy error:", error);
+
+            alert("Could not copy notes. Please try again.");
+        }
+    }
+
+
+    // --------------------------------------------------
+    // Download Markdown file
+    // --------------------------------------------------
+
+    function downloadNotes() {
+
+        if (!currentNotes) {
+            alert("Generate meeting notes before downloading.");
+            return;
+        }
+
+        const markdown = createMarkdownNotes(currentNotes);
+
+        const blob = new Blob(
+            [markdown],
+            { type: "text/markdown;charset=utf-8" }
+        );
+
+        const url = URL.createObjectURL(blob);
+
+        const link = document.createElement("a");
+
+        link.href = url;
+        link.download = "gnanimeet-meeting-notes.md";
+
+        document.body.appendChild(link);
+
+        link.click();
+
+        link.remove();
+
+        URL.revokeObjectURL(url);
+    }
+
+
+    // --------------------------------------------------
+    // Convert notes to Markdown
+    // --------------------------------------------------
+
+    function createMarkdownNotes(notes) {
+
+        let markdown = "# Meeting Notes\n\n";
+
+        markdown += "## Executive Summary\n\n";
+        markdown += (notes.summary || "No summary available.") + "\n\n";
+
+        markdown += "## Key Discussion Points\n\n";
+
+        if (Array.isArray(notes.key_points)) {
+            notes.key_points.forEach(point => {
+                markdown += `- ${point}\n`;
+            });
+        }
+
+        markdown += "\n## Decisions\n\n";
+
+        if (Array.isArray(notes.decisions)) {
+            notes.decisions.forEach(decision => {
+                markdown += `- ${decision}\n`;
+            });
+        }
+
+        markdown += "\n## Action Items\n\n";
+
+        if (Array.isArray(notes.action_items)) {
+            notes.action_items.forEach(item => {
+
+                markdown +=
+                    `- **Task:** ${item.task || "Not specified"}\n`;
+
+                markdown +=
+                    `  - **Owner:** ${item.owner || "Not specified"}\n`;
+
+                markdown +=
+                    `  - **Deadline:** ${item.deadline || "Not specified"}\n\n`;
+            });
+        }
+
+        markdown += "\n## Open Questions\n\n";
+
+        if (Array.isArray(notes.open_questions)) {
+            notes.open_questions.forEach(question => {
+                markdown += `- ${question}\n`;
+            });
+        }
+
+        return markdown;
+    }
+
+
+    // --------------------------------------------------
+    // Status messages
+    // --------------------------------------------------
+
+    function showStatus(element, message, type) {
+
+        element.textContent = message;
+
+        element.className = "status";
+
+        if (type) {
+            element.classList.add(type);
+        }
+    }
+
+</script>
+
+</body>
+</html>
