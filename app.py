@@ -1,3 +1,4 @@
+
 import os
 import json
 import tempfile
@@ -30,6 +31,7 @@ GROQ_MODEL = os.getenv(
 )
 
 GROQ_URL = "https://api.groq.com/openai/v1/chat/completions"
+
 
 # --------------------------------------------------
 # Prisma: Transcribe one audio chunk
@@ -72,12 +74,11 @@ def prisma_transcribe_chunk(audio_path):
 
     if not response.ok:
         raise RuntimeError(
-            f"Prisma API Error ({response.status}): {response.text}"
+            f"Prisma API Error ({response.status_code}): {response.text}"
         )
 
     result = response.json()
 
-    # Handle common Prisma response formats
     if isinstance(result, dict):
         transcript = (
             result.get("transcript")
@@ -88,7 +89,6 @@ def prisma_transcribe_chunk(audio_path):
         if transcript:
             return transcript
 
-        # Some APIs return nested result objects
         nested_result = result.get("result")
 
         if isinstance(nested_result, dict):
@@ -237,7 +237,7 @@ If a section has no information, return an empty array.
 
     if not response.ok:
         raise RuntimeError(
-            f"Groq API Error ({response.status}): {response.text}"
+            f"Groq API Error ({response.status_code}): {response.text}"
         )
 
     result = response.json()
@@ -363,4 +363,3 @@ if __name__ == "__main__":
         port=5000,
         debug=True
     )
-
